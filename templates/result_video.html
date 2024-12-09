@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kết quả nhận diện Video</title>
+    <style>
+        /* Reset & Body */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        /* Header */
+        header {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+        }
+
+        /* Main Content */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .video-info {
+            margin-bottom: 20px;
+            text-align: center;
+            background-color: #e7e7e7;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        video {
+            margin-top: 20px;
+            width: 90%;
+            max-width: 800px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            background-color: #007bff;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        a:hover {
+            background-color: #0056b3;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #f8f9fa;
+            text-align: center;
+            padding: 10px 0;
+            height: 10px; /* Giảm chiều cao */
+            font-size: 14px;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        footer p {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Hệ Thống Nhận Diện Phương Tiện</h1>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <h1>Kết quả nhận diện Video</h1>
+        
+        <div class="video-info">
+            <p>Tổng số khung hình: {{ total_frames }}</p>
+            <p>Số đối tượng nhận diện được: {{ object_count }}</p>
+        </div>
+        
+        <video controls>
+            <source src="{{ url_for('static', filename='uploads/' + video_filename) }}" type="video/mp4">
+            Trình duyệt của bạn không hỗ trợ phát video.
+        </video>
+        
+        <div class="button-container">
+            <a href="{{ url_for('static', filename='uploads/' + video_filename) }}" download>Tải xuống video</a>
+            <a href="/">Quay lại trang chính</a>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>© 2024 Nhận Diện Phương Tiện | Được phát triển bởi Nhóm ABC</p>
+    </footer>
+</body>
+</html>

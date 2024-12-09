@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 6
+names: ['bus', 'car', 'container-truck', 'motorcycle', 'person', 'truck']
+
+roboflow:
+  workspace: nghile
+  project: data-ptgt
+  version: 10
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/nghile/data-ptgt/dataset/10

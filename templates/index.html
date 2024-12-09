@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nhận Diện Phương Tiện Giao Thông</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+        .btn-primary {
+            background-color: #3498db;
+            border-color: #3498db;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+        .upload-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .file-info {
+            color: #7f8c8d;
+            margin-top: 10px;
+        }
+        .result-section {
+            margin-top: 30px;
+            text-align: center;
+        }
+        .result-image {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        .detection-badge {
+            font-size: 18px;
+            margin-top: 15px;
+        }
+        .header, .footer {
+            background-color: #007bff;
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            text-align: center;
+            padding: 10px 0;
+            height: 10px; /* Giảm chiều cao */
+            font-size: 14px;
+            color: #6c757d;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <h2>Hệ Thống Nhận Diện Phương Tiện</h2>
+    </div>
+
+    <div class="container">
+        <h1 class="text-center mb-4">Nhận Diện Phương Tiện Giao Thông</h1>
+        
+        <div class="upload-section">
+            <!-- Hidden input for file upload -->
+            <input type="file" id="fileInput" accept="image/*" class="form-control d-none">
+            
+            <!-- Button for triggering file selection -->
+            <button id="uploadButton" class="btn btn-primary btn-lg w-100">
+                <i class="bi bi-upload me-2"></i>Chọn ảnh để phân tích
+            </button>
+            
+            <div id="fileInfo" class="file-info"></div>
+            
+            <!-- Hidden form for file upload -->
+            <form id="uploadForm" action="/" method="POST" enctype="multipart/form-data">
+                <input type="file" name="file" id="formFileInput" class="d-none">
+            </form>
+        </div>
+
+        <!-- Camera and Video upload buttons -->
+        <div class="text-center mb-3">
+            <button onclick="openCamera()" class="btn btn-success me-2">
+                <i class="bi bi-camera"></i> Camera
+            </button>
+            <button id="uploadVideoButton" class="btn btn-info">
+                <i class="bi bi-film"></i> Video
+            </button>
+        </div>
+
+        <!-- Video Upload Form -->
+        <form id="videoUploadForm" action="/video" method="POST" enctype="multipart/form-data" class="d-none">
+            <input type="file" name="file" id="videoInput" accept="video/*">
+        </form>
+
+        <!-- Result section -->
+        {% if user_image %}
+        <div class="result-section">
+            <h3>Kết quả nhận diện</h3>
+            <img src="{{ url_for('static', filename=user_image) }}?{{ rand }}" 
+                 alt="Kết quả nhận diện" class="result-image">
+            
+            {% if ndet > 0 %}
+            <div class="alert alert-success detection-badge">
+                Nhận diện được {{ ndet }} đối tượng
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+        <p>&copy; 2024 Nhận Diện Phương Tiện | Được phát triển bởi Nhóm ABC</p>
+    </div>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    
+    <script>
+        $(document).ready(function() {
+            // Trigger file input click when button is clicked
+            $("#uploadButton").on('click', function() {
+                $("#fileInput").click();
+            });
+
+            // Handle file input change
+            $("#fileInput").on('change', function() {
+                var file = this.files[0]; // Get the selected file
+                if (file) {
+                    var fileName = file.name;
+                    var fileSize = (file.size / 1024).toFixed(2);
+
+                    // Display file info
+                    $("#fileInfo").html(`
+                        <span class="text-primary">
+                            ${fileName} (${fileSize} KB)
+                        </span>
+                    `);
+
+                    // Assign selected file to the hidden form input
+                    var dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(file);
+                    $("#formFileInput")[0].files = dataTransfer.files;
+
+                    // Submit the form
+                    $("#uploadForm").submit();
+                }
+            });
+
+            // Trigger video input click when video button is clicked
+            $("#uploadVideoButton").on('click', function() {
+                $("#videoInput").click();
+            });
+
+            // Handle video input change
+            $("#videoInput").on('change', function() {
+                var file = this.files[0];
+                if (file) {
+                    $("#videoUploadForm").submit();
+                }
+            });
+        });
+
+        // Camera button logic
+        function openCamera() {
+            window.location.href = "/camera";
+        }
+    </script>
+</body>
+</html>
